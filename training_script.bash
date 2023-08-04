@@ -9,27 +9,52 @@ repo_name="DEPP"
 if [ -d "$repo_name" ]; then
     echo "Repo exists, deleting it..."
     rm -rf DEPP
-    echo "Cloning the repo..."
     git clone https://github.com/fadli0029/DEPP.git
-    exit 1
 else
     echo "Repo DO NOT exists, cloning it..."
     git clone https://github.com/fadli0029/DEPP.git
 fi
 
 # Going to the repo directory
+echo
 echo "Going to the repo directory..."
 cd DEPP
 
 # Creating and activating conda environment
-echo "Creating and activating conda environment..."
-conda env create -f depp_env.yml
-rm depp_env.yml
-conda activate depp_env
+echo
+env_name="depp_env"
+# Check if the environment exists
+if conda env list | grep -q "$env_name"; then
+    echo "Environment $env_name exists. Activating..."
+    conda init
+    if [[ $SHELL == *"bash"* ]]; then
+        source ~/.bashrc
+    elif [[ $SHELL == *"zsh"* ]]; then
+        source ~/.zshrc
+    else
+        echo "The shell is Unknown. So, not sourcing the .bashrc or .zshrc file."
+    fi
+    conda activate depp_env
+else
+    echo "Environment $env_name does not exist."
+    echo "Creating and activating conda environment..."
+    conda env create -f depp_env.yml
+    rm depp_env.yml
+    conda init
+    if [[ $SHELL == *"bash"* ]]; then
+        source ~/.bashrc
+    elif [[ $SHELL == *"zsh"* ]]; then
+        source ~/.zshrc
+    else
+        echo "The shell is Unknown. So, not sourcing the .bashrc or .zshrc file."
+    fi
+    conda activate depp_env
+fi
 
 ###############################################################################
 # ==================== DONWLOADING THE REFERENCE PACKAGE ==================== #
 ###############################################################################
+echo
 echo "Downloading the reference package (tipp2-refpkg)..."
 
 # URL of the tar.gz file
@@ -56,7 +81,9 @@ fi
 ###############################################################################
 # ============================ TRAINING THE MODEL =========================== #
 ###############################################################################
-echo "##########################################################"
+echo
+echo "########################################################################"
+echo "########################################################################"
 echo "Training the model from scratch (with GPU, 1001 epochs)..."
 echo
 echo "backbone_seq_file:"
@@ -66,7 +93,8 @@ echo "backbone_tree_file: ..."
 echo "tipp2-refpkg/markers-v3/args_cog0018.refpkg/raxml_refined.taxonomy"
 echo
 echo "Model directory: test/basic/test_model"
-echo "##########################################################"
+echo "########################################################################"
+echo "########################################################################"
 
 # Makes sure to remove directory if it exists
 tipp2-refpkg/markers-v3/ArgS_COG0018.refpkg
