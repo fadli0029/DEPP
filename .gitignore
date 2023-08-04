@@ -19,3 +19,4 @@ depp/*.split.py
 */*bak*
 *swp
 depp_test.egg-info/
+tipp2-refpkg/
