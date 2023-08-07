@@ -5,6 +5,7 @@ dependencies:
   - python=3.8.12
   - gappa=0.7.1
   - newick_utils=1.6
+  - scipy=1.6.2
   - pip
   - pip:
     - depp==0.2.3
