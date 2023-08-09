@@ -23,3 +23,4 @@ tipp2-refpkg/
 *.tar.gz
 run_gpu_shared_job.sh
 training_script.sh
+test/
