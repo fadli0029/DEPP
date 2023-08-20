@@ -34,7 +34,7 @@ for MARKER_GENE_DIR in $MARKER_DIR/*; do
     cat <<EOL >$TMP_SCRIPT
 #!/bin/bash
 #SBATCH --job-name="$MARKER_GENE"
-#SBATCH --output="${MARKER_GENE}_job_output.%j.%N.out"
+#SBATCH --output="job_outputs/${MARKER_GENE}.%j.%N.out"
 #SBATCH --partition=gpu-shared
 #SBATCH --nodes=1
 #SBATCH -t 48:00:00
