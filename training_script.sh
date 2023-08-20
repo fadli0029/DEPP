@@ -23,17 +23,22 @@ echo
 echo "===============> Cloning the repo..."
 repo_name="DEPP"
 
-# Check if the directory exists
-if [ -d "$repo_name" ]; then
-    echo "Repo exists, cd'ing to DEPP and pulling from main branch..."
-    cd DEPP
-    git pull
+# Check if the current directory is already the DEPP repo directory
+if [ "$(basename $(pwd))" == "$repo_name" ]; then
+    echo "Already inside the DEPP repo directory. Skipping repo cloning/checking."
 else
-    echo "Repo DO NOT exists, cloning it and cd'ing into DEPP..."
-    git clone https://github.com/fadli0029/DEPP.git
-    echo "===============> Going to the repo directory..."
-    cd DEPP
-    pwd
+    # Check if the directory exists
+    if [ -d "$repo_name" ]; then
+        echo "Repo exists, cd'ing to DEPP and pulling from main branch..."
+        cd DEPP
+        git pull
+    else
+        echo "Repo DO NOT exists, cloning it and cd'ing into DEPP..."
+        git clone https://github.com/fadli0029/DEPP.git
+        echo "===============> Going to the repo directory..."
+        cd DEPP
+        pwd
+    fi
 fi
 
 # Creating and activating conda environment
@@ -152,4 +157,3 @@ echo
 # Makes sure to remove directory if it exists
 rm -rf test/basic/test_model
 python train_depp.py backbone_seq_file="$BACKBONE_SEQ_FILE" backbone_tree_file="$BACKBONE_TREE_FILE" model_dir="$MODEL_DIR" gpus='[0]' epoch=1001
-# python train_depp.py backbone_seq_file=tipp2-refpkg/markers-v3/ArgS_COG0018.refpkg/ArgS_COG0018_alignment.fasta backbone_tree_file=tipp2-refpkg/markers-v3/ArgS_COG0018.refpkg/raxml_refined.taxonomy model_dir=test/basic/test_model gpus='[0]' epoch=1001

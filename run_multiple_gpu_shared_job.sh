@@ -13,7 +13,7 @@ fi
 JOB_COUNT=0
 
 # Directory containing the marker genes
-MARKER_DIR="TESTING-tipp2-refpkg/markers-v3"
+MARKER_DIR="tipp2-refpkg/markers-v3"
 
 # Loop through the marker gene directories
 for MARKER_GENE_DIR in $MARKER_DIR/*.refpkg; do
@@ -61,7 +61,7 @@ EOL
     sbatch $TMP_SCRIPT
 
     # Optionally, remove the temporary script after submission
-    # rm $TMP_SCRIPT
+    rm $TMP_SCRIPT
 
     # Increment the job counter
     ((JOB_COUNT++))
