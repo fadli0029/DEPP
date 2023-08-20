@@ -23,18 +23,38 @@ echo
 echo "===============> Cloning the repo..."
 repo_name="DEPP"
 
-# Check if the directory exists
-if [ -d "$repo_name" ]; then
-    echo "Repo exists, cd'ing to DEPP and pulling from main branch..."
-    cd DEPP
-    git pull
+# Check if the current directory is already the DEPP repo directory
+if [ "$(basename $(pwd))" == "$repo_name" ]; then
+    echo "Already inside the DEPP repo directory. Skipping repo cloning/checking."
 else
-    echo "Repo DO NOT exists, cloning it and cd'ing into DEPP..."
-    git clone https://github.com/fadli0029/DEPP.git
-    echo "===============> Going to the repo directory..."
-    cd DEPP
-    pwd
+    # Check if the directory exists
+    if [ -d "$repo_name" ]; then
+        echo "Repo exists, cd'ing to DEPP and pulling from main branch..."
+        cd DEPP
+        git pull
+    else
+        echo "Repo DO NOT exists, cloning it and cd'ing into DEPP..."
+        git clone https://github.com/fadli0029/DEPP.git
+        echo "===============> Going to the repo directory..."
+        cd DEPP
+        pwd
+    fi
 fi
+
+# ---
+
+# # Check if the directory exists
+# if [ -d "$repo_name" ]; then
+#     echo "Repo exists, cd'ing to DEPP and pulling from main branch..."
+#     cd DEPP
+#     git pull
+# else
+#     echo "Repo DO NOT exists, cloning it and cd'ing into DEPP..."
+#     git clone https://github.com/fadli0029/DEPP.git
+#     echo "===============> Going to the repo directory..."
+#     cd DEPP
+#     pwd
+# fi
 
 # Creating and activating conda environment
 echo
