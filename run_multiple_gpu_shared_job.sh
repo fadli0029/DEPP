@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Check if the job_outputs and depp_models directory exist; if not, create them
+if [ ! -d "job_outputs" ]; then
+    mkdir job_outputs
+fi
+
+if [ ! -d "depp_models" ]; then
+    mkdir depp_models
+fi
+
 # Initialize a counter for the number of jobs submitted
 JOB_COUNT=0
 
@@ -14,7 +23,7 @@ for MARKER_GENE_DIR in $MARKER_DIR/*.refpkg; do
     # Dynamically generate the paths
     BACKBONE_SEQ_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/${MARKER_GENE}_alignment.fasta"
     BACKBONE_TREE_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/raxml_refined.taxonomy"
-    MODEL_DIR="${MARKER_GENE}_model"
+    MODEL_DIR="depp_models/${MARKER_GENE}_model"
 
     # Check for the unwanted backbone_tree_file signature and skip if found
     if [[ $BACKBONE_TREE_FILE == *raxml_unrefined_taxonomy ]]; then
