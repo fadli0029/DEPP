@@ -4,19 +4,13 @@
 JOB_COUNT=0
 
 # Directory containing the marker genes
-MARKER_DIR="DEPP/TESTING-tipp2-refpkg/markers-v3"
+MARKER_DIR="TESTING-tipp2-refpkg/markers-v3"
 
 # Loop through the marker gene directories
-for MARKER_GENE_DIR in $MARKER_DIR/*; do
+for MARKER_GENE_DIR in $MARKER_DIR/*.refpkg; do
     # Extract the marker gene name from the directory path
-    MARKER_GENE=$(basename $MARKER_GENE_DIR)
+    MARKER_GENE=$(basename $MARKER_GENE_DIR .refpkg)
 
-    # Skip unwanted directories and files
-    case $MARKER_GENE in
-        blast|scripts|taxonomy|file-map-for-tipp.txt|info.txt)
-            continue
-            ;;
-    esac
     # Dynamically generate the paths
     BACKBONE_SEQ_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/${MARKER_GENE}_alignment.fasta"
     BACKBONE_TREE_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/raxml_refined.taxonomy"
@@ -28,7 +22,7 @@ for MARKER_GENE_DIR in $MARKER_DIR/*; do
     fi
 
     # Create a temporary script
-    TMP_SCRIPT="tmp_job_$MARKER_GENE.sh"
+    TMP_SCRIPT="tmp_jobscript_$MARKER_GENE.sh"
 
     # Write SBATCH directives and the rest of the script to the temporary script
     cat <<EOL >$TMP_SCRIPT
