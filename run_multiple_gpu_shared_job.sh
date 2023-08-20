@@ -54,7 +54,7 @@ module load anaconda3
 module load cuda/11.0.2
 module list
 
-./testing_training_script.sh --backbone_seq_file "$BACKBONE_SEQ_FILE" --backbone_tree_file "$BACKBONE_TREE_FILE" --model_dir "$MODEL_DIR"
+./training_script.sh --backbone_seq_file "$BACKBONE_SEQ_FILE" --backbone_tree_file "$BACKBONE_TREE_FILE" --model_dir "$MODEL_DIR"
 EOL
 
     # Submit the temporary script to SLURM
