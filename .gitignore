@@ -20,7 +20,6 @@ depp/*.split.py
 *swp
 depp_test.egg-info/
 tipp2-refpkg/
+TESTING-tipp2-refpkg/
 *.tar.gz
-run_gpu_shared_job.sh
-training_script.sh
 test/

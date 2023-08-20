@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Directory containing the marker genes
+MARKER_DIR="tipp2-refpkg/markers-v3"
+
+# Loop through the marker gene directories
+for MARKER_GENE_DIR in $MARKER_DIR/*; do
+    # Extract the marker gene name from the directory path
+    MARKER_GENE=$(basename $MARKER_GENE_DIR)
+
+    # Skip unwanted directories and files
+    case $MARKER_GENE in
+        blast|scripts|taxonomy|file-map-for-tipp.txt|info.txt)
+            continue
+            ;;
+    esac
+    # Dynamically generate the paths
+    BACKBONE_SEQ_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/${MARKER_GENE}_alignment.fasta"
+    BACKBONE_TREE_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/raxml_refined.taxonomy"
+    MODEL_DIR="${MARKER_GENE}_model"
+
+    # Check for the unwanted backbone_tree_file signature and skip if found
+    if [[ $BACKBONE_TREE_FILE == *raxml_unrefined_taxonomy ]]; then
+        continue
+    fi
+
+    # Create a temporary script
+    TMP_SCRIPT="tmp_job_$MARKER_GENE.sh"
+
+    # Write SBATCH directives and the rest of the script to the temporary script
+    cat <<EOL >$TMP_SCRIPT
+#!/bin/bash
+#SBATCH --job-name="$MARKER_GENE"
+#SBATCH --output="${MARKER_GENE}_job_output.%j.%N.out"
+#SBATCH --partition=gpu-shared
+#SBATCH --nodes=1
+#SBATCH -t 48:00:00
+#SBATCH --mem=90G
+#SBATCH --ntasks-per-node=4
+#SBATCH --gpus=1
+#SBATCH --account=uot138
+#SBATCH --constraint="lustre"
+
+module purge
+module restore
+module load gpu/0.15.4
+module load anaconda3
+module load cuda/11.0.2
+module list
+
+./train.sh --backbone_seq_file "$BACKBONE_SEQ_FILE" --backbone_tree_file "$BACKBONE_TREE_FILE" --model_dir "$MODEL_DIR"
+EOL
+
+    # Submit the temporary script to SLURM
+    sbatch $TMP_SCRIPT
+
+    # Optionally, remove the temporary script after submission
+    # rm $TMP_SCRIPT
+done
