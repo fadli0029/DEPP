@@ -20,6 +20,6 @@ depp/*.split.py
 *swp
 depp_test.egg-info/
 tipp2-refpkg/
-TESTING-tipp2-refpkg/
 *.tar.gz
 test/
+depp_models/
