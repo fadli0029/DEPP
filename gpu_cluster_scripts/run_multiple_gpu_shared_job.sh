@@ -4,11 +4,11 @@
 readarray -t SUBMITTED_GENES < trained_genes.txt
 
 # Check if the job_outputs and depp_models directory exist; if not, create them
-if [ ! -d "job_outputs" ]; then
+if [ ! -d "../job_outputs" ]; then
     mkdir job_outputs
 fi
 
-if [ ! -d "depp_models" ]; then
+if [ ! -d "../depp_models" ]; then
     mkdir depp_models
 fi
 
@@ -16,14 +16,14 @@ fi
 JOB_COUNT=0
 
 # Directory containing the marker genes
-MARKER_DIR="tipp2-refpkg/markers-v3"
+MARKER_DIR="../tipp2-refpkg/markers-v3"
 
 # Loop through the marker gene directories
 for MARKER_GENE_DIR in $MARKER_DIR/*.refpkg; do
     # Extract the marker gene name from the directory path
     MARKER_GENE=$(basename $MARKER_GENE_DIR .refpkg)
 
-    # Check if the current marker gene is in the list of submitted genes
+    # Check if the current marker gene is in the list of already trained genes
     if [[ " ${SUBMITTED_GENES[@]} " =~ " $MARKER_GENE " ]]; then
         echo "Job already submitted for $MARKER_GENE. Skipping..."
         continue
@@ -32,7 +32,7 @@ for MARKER_GENE_DIR in $MARKER_DIR/*.refpkg; do
     # Dynamically generate the paths
     BACKBONE_SEQ_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/${MARKER_GENE}_alignment.fasta"
     BACKBONE_TREE_FILE="$MARKER_DIR/$MARKER_GENE.refpkg/raxml_refined.taxonomy"
-    MODEL_DIR="depp_models/${MARKER_GENE}_model"
+    MODEL_DIR="../depp_models/${MARKER_GENE}_model"
 
     # Check for the unwanted backbone_tree_file signature and skip if found
     if [[ $BACKBONE_TREE_FILE == *raxml_unrefined_taxonomy ]]; then
@@ -46,7 +46,7 @@ for MARKER_GENE_DIR in $MARKER_DIR/*.refpkg; do
     cat <<EOL >$TMP_SCRIPT
 #!/bin/bash
 #SBATCH --job-name="$MARKER_GENE"
-#SBATCH --output="job_outputs/${MARKER_GENE}.%j.%N.out"
+#SBATCH --output="../job_outputs/${MARKER_GENE}.%j.%N.out"
 #SBATCH --partition=gpu-shared
 #SBATCH --nodes=1
 #SBATCH -t 48:00:00
